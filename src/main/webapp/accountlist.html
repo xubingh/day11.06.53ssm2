@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>list</title>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                url:"account/getList",
+                type:"post",
+                dataType:"json",
+                success:function (list) {
+                    alert(list);
+                    var table=$("#mytable");
+                    for (var i in list) {
+                        table.append("<tr align='center'><td>"+list[i].id+"</td>"+
+                        "<td>"+list[i].name+"</td>"+
+                         "<td>"+list[i].money+"</td>"+
+                         "<td>"+"<a href='javascript:void(0);'onclick='del(this,"+list[i].id+")'>删除</a>"+"</td>"+"</tr>")
+                    }
+                }
+            });
+        });
+    </script>
+    <style>
+        #mytable{
+            border: 1px;
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+<table border="1" id="mytable" cellspacing="0" cellpadding="0" align="center">
+    <tr>
+        <th>编号</th>
+        <th>姓名</th>
+        <th>余额</th>
+        <th>操作</th>
+    </tr>
+</table>
+</body>
+</html>

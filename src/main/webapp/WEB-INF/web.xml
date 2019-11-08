@@ -1,0 +1,64 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
+  <!--设置配置文件的路径 上下文配置配合监听器
+  spring实现的监听器回去创建webapplicationContext这个容器-->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+      <!--calsspath:当前项目的类路径下找相应的文件-->
+      <!--classpath*:当前项目的类路径下找相应的文件,也会去相应的jar包下找相应的文件-->
+    <param-value>classpath:spring-context.xml</param-value>
+  </context-param>
+
+
+
+  <!--解决中文乱码的过滤器-->
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+
+    <!--spring容器和springmvc的结合-->
+  <!--配置Spring的监听器，默认只加载WEB-INF目录下的applicationContext.xml配置文件-->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+
+
+  <!--配置前端控制器 dispatcherServlet 控制中心-->
+  <servlet>
+    <servlet-name>dispatcherServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <!--加载springmvc.xml配置文件-->
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <!--启动服务器，创建该servlet-->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dispatcherServlet</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+
+
+
+
+
+</web-app>

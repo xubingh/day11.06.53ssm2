@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+    <context:component-scan base-package="com.qf">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+
+    <!--Spring 整合mybatis 框架-->
+    <!--配置连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="url" value="jdbc:mysql://localhost:3306/mybatis?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+
+
+
+     <!--配置sqlsessionFactory工厂类-->
+    <bean id="sessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <!--加载mybatis全局配置文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+
+        <!--不是全局配置文件-->
+        <!--<property name="typeAliasesPackage" value="com.qf.entity"></property>-->
+        <!--<property name="mapperLocations">-->
+            <!--<array>-->
+                <!--<value>mybatis-mapper.xml</value>-->
+            <!--</array>-->
+        <!--</property>-->
+    </bean>
+
+
+
+
+    <!--配置AccountDao接口所在包-->
+    <!--自动扫描 将mapper接口生成代理注入spring-->
+    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.qf.mappers"></property>
+    </bean>
+
+
+    <!--配置spring框架事务管理器-->
+    <bean id="dataSourceTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!--配置事务通知-->
+    <tx:advice id="transactionInterceptor" transaction-manager="dataSourceTransactionManager">
+        <tx:attributes>
+            <tx:method name="*" read-only="false" propagation="REQUIRED"/>
+            <!--find* 提交的方式,一般用于增删改才开启事务,其他的都是只读-->
+            <tx:method name="find*" read-only="true"></tx:method>
+        </tx:attributes>
+    </tx:advice>
+
+    <!--配置aop增强 配置那些方法需要事务管理的路径-->
+    <aop:config>
+        <aop:advisor advice-ref="transactionInterceptor" pointcut="execution(* com.qf.service.impl.*.*(..))"/>
+    </aop:config>
+
+</beans>

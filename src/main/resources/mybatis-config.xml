@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--配置数据库文件-->
+    <properties resource="db.properties"></properties>
+
+    <!--配置别名-->
+    <typeAliases>
+        <package name="com.qf.entity"></package>
+    </typeAliases>
+
+
+
+    <!--&lt;!&ndash;配置环境&ndash;&gt;-->
+    <!--<environments default="mysql">-->
+        <!--<environment id="mysql">-->
+            <!--<transactionManager type="JDBC"></transactionManager>-->
+            <!--<dataSource type="POOLED">-->
+                <!--<property name="driver" value="${driver}"></property>-->
+                <!--<property name="url" value="${url}"></property>-->
+                <!--<property name="username" value="${username}"></property>-->
+                <!--<property name="password" value="${password}"></property>-->
+            <!--</dataSource>-->
+        <!--</environment>-->
+    <!--</environments>-->
+
+
+
+
+    <!--配置映射文件-->
+    <mappers>
+        <mapper resource="mybatis-mapper.xml"></mapper>
+    </mappers>
+</configuration>
